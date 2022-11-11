@@ -1,4 +1,5 @@
 # coding: utf-8
+import os
 import pandas as pd
 import numpy as np
 import logging
@@ -16,7 +17,7 @@ def check_1mins_time(input_df):
     return True
             
 
-def make_5mins_ohlc(one_mins_file, five_mins_file):
+def make_5mins_ohlc_file(one_mins_file, five_mins_file):
     df_1mins = pd.read_csv(one_mins_file, names=['ts', 'time', 'open', 'high', 'low', 'close', 'volumn'], sep='\t')
     if not check_1mins_time(df_1mins):
         return
@@ -52,5 +53,12 @@ def make_5mins_ohlc(one_mins_file, five_mins_file):
         time = ''
     df_5mins.to_csv(five_mins_file, sep='\t')
 
+def make_5mins_ohlc_dir(input_dir, output_dir):
+    for filename in os.listdir(input_dir):
+        logger.info(filename)
+        make_5mins_ohlc_file(one_mins_file=os.path.join(input_dir, filename), five_mins_file=os.path.join(output_dir, filename))
+        
+
 if __name__ == '__main__':
-    make_5mins_ohlc(one_mins_file='./2022-08-30_TSLA_tiger', five_mins_file='./2022-08-30_TSLA_tiger_5mins.csv')
+    make_5mins_ohlc_dir('/Users/xiaokunfan/code/data/TSLA', '/Users/xiaokunfan/code/data/TSLA_5mins_ohlc')
+    #make_5mins_ohlc_file(one_mins_file='./2022-08-30_TSLA_tiger', five_mins_file='./2022-08-30_TSLA_tiger_5mins.csv')
